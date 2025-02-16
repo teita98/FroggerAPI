@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.vedruna.frogger.dto.ResponseDTO;
 import org.vedruna.frogger.dto.UserDTO;
 import org.vedruna.frogger.service.FollowServiceI;
 
@@ -19,18 +20,18 @@ public class FollowController {
      * POST /follow/{userId} - El usuario logueado sigue al usuario indicado.
      */
     @PostMapping("/follow/{userId}")
-    public ResponseEntity<String> followUser(@PathVariable Integer userId) {
+    public ResponseEntity<ResponseDTO> followUser(@PathVariable Integer userId) {
         followService.followUser(userId);
-        return ResponseEntity.ok("Ahora sigues al usuario " + userId);
+        return ResponseEntity.ok(new ResponseDTO("Ahora sigues al usuario " + userId));
     }
 
     /**
      * DELETE /unfollow/{userId} - El usuario logueado deja de seguir al usuario indicado.
      */
     @DeleteMapping("/unfollow/{userId}")
-    public ResponseEntity<String> unfollowUser(@PathVariable Integer userId) {
+    public ResponseEntity<ResponseDTO> unfollowUser(@PathVariable Integer userId) {
         followService.unfollowUser(userId);
-        return ResponseEntity.ok("Has dejado de seguir al usuario " + userId);
+        return ResponseEntity.ok(new ResponseDTO("Has dejado de seguir al usuario " + userId));
     }
 
     /**

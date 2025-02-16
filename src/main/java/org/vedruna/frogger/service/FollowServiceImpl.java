@@ -35,6 +35,12 @@ public class FollowServiceImpl implements FollowServiceI {
     @Override
     public void followUser(Integer userId) {
         User follower = getAuthenticatedUser();
+
+        // Validación: no permitir seguirse a sí mismo
+        if (follower.getUserId().equals(userId)) {
+            throw new RuntimeException("No puedes seguirte a ti mismo");
+        }
+
         User following = userRepository.findByUserId(userId)
                 .orElseThrow(() -> new RuntimeException("Usuario a seguir no encontrado"));
 
@@ -70,7 +76,7 @@ public class FollowServiceImpl implements FollowServiceI {
 
         return followRepository.findByFollower(user, pageable)
                 .map(follow -> new UserDTO(
-                        follow.getFollower().getUserId(),
+                        follow.getFollowing().getUserId(),
                         follow.getFollowing().getUsername(),
                         follow.getFollowing().getEmail(),
                         followingCount,
@@ -96,8 +102,8 @@ public class FollowServiceImpl implements FollowServiceI {
         return followRepository.findByFollowing(user, pageable)
                 .map(follow -> new UserDTO(
                         follow.getFollower().getUserId(),
-                        follow.getFollowing().getUsername(),
-                        follow.getFollowing().getEmail(),
+                        follow.getFollower().getUsername(),
+                        follow.getFollower().getEmail(),
                         followingCount,
                         followersCount,
                         recordTime));
